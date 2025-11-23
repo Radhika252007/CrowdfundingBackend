@@ -65,7 +65,7 @@ router.post(
       if (!categoryDoc)
         return res.status(404).json({ message: "Category not found" });
 
-      const category_id = categoryDoc.campaign_id;
+      const category_id = categoryDoc.category_id;
 
       let beneficiary = await Beneficiary.findOne({
         beneficiary_name,
