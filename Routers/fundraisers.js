@@ -39,8 +39,8 @@ router.post(
   "/campaignform",
   authenticateUser,
   upload.fields([
-    { name: "images[]", maxCount: 5 },
-    { name: "files[]", maxCount: 2 },
+    { name: "images", maxCount: 5 },
+    { name: "files", maxCount: 2 },
   ]),
   async (req, res) => {
     try {
