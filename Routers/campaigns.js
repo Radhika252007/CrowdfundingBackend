@@ -48,7 +48,7 @@ router.get('/category/:categoryName', async (req, res) => {
     if (!category) return res.status(404).json({ error: "Category not found" });
 
     // 2️⃣ Find campaigns with that category_id
-    const campaigns = await Campaign.find({ category_id: category._id })
+    const campaigns = await Campaign.find({ category_id: category.category_id })
       .populate('user_id', 'name user_image')
       .lean();
 
