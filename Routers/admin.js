@@ -56,7 +56,7 @@ router.post("/register", async (req, res) => {
     const hashedPass = await bcrypt.hash(admin_pass, 10);
 
     const newAdmin = await Admin.create({
-      admin_id: generateAdminId(),
+      admin_id: await generateAdminId(),
       admin_name,
       admin_email,
       admin_pass: hashedPass,
