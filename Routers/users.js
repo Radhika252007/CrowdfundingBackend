@@ -1,15 +1,13 @@
 import express from 'express';
-import bcrypt from 'bcrypt';
 import upload from '../config/multerCloudinaryConfig.js';
 import { authenticateUser, authorizeRole } from './auth.js';
 
-import User from '../models/User.js';
-import Campaign from '../models/Campaign.js';
-import Donation from '../models/Donation.js';
-import CampaignImage from '../models/CampaignImage.js';
-import mongoose from 'mongoose';
-import CampaignComment from '../models/CampaignComment.js';
-import CampaignShare from '../models/CampaignShare.js';
+import { getUserCampaigns } from '../controllers/userController.js';
+import { getUserProfile } from '../controllers/userController.js';
+import { updateUserProfile } from '../controllers/userController.js';
+import { getUserDonations } from '../controllers/userController.js';
+import { getUserCampaign } from '../controllers/userController.js';
+import { getCampaignDashboardStats } from '../controllers/userController.js';   
 
 const router = express.Router();
 
