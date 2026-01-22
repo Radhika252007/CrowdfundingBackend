@@ -1,96 +1,28 @@
-import express from "express";
-import Admin from "../models/Admin.js";
-import User from "../models/User.js";
-import Campaign from "../models/Campaign.js";
-import Donation from "../models/Donation.js";
-import CampaignImage from "../models/CampaignImage.js";
-import CampaignFile from "../models/CampaignFile.js";
-import { adminAuth } from "../middleware/adminAuth.js";
-import Category from '../models/Category.js';
-import bcrypt from "bcrypt";
-import jwt from 'jsonwebtoken';
+import express from 'express';
+import { adminAuth } from '../middleware/adminAuth.js';
+import {
+  adminLogin,
+  registerAdmin,
+  getAllUsers,
+  getAllCampaigns,
+  getAdminCampaigns,
+  approveCampaign,
+  getAllDonations
+} from '../controllers/adminController.js';
 
 const router = express.Router();
 
-// --- Admin Login ---
-router.post("/login", async (req, res) => {
-  try {
-    const { admin_email, admin_pass } = req.body;
-    console.log("Login attempt:", req.body);
+// Admin login
+router.post('/login', adminLogin);
 
-    const admin = await Admin.findOne({ admin_email: admin_email });
-console.log("Admin found in DB:", admin);
+// Register new admin
+router.post('/register', registerAdmin);
 
-if (!admin) return res.status(401).json({ message: "Invalid email or password" });
-
-const isMatch = await bcrypt.compare(admin_pass, admin.admin_pass);
-console.log(isMatch)
-if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
-
-
-    const token = jwt.sign({ admin_id: admin.admin_id }, process.env.ACCESS_SECRET_KEY, { expiresIn: "1d" });
-
-    res.status(200).json({ message: "Login successful", token });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-
-// REGISTER NEW ADMIN (Backend generates admin_id)
-router.post("/register", async (req, res) => {
-    console.log("Register body:", req.body);
-  try {
-    const { admin_name, admin_email, admin_pass } = req.body;
-
-    if (!admin_name || !admin_email || !admin_pass) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    const existingAdmin = await Admin.findOne({ admin_email });
-    if (existingAdmin) {
-      return res.status(400).json({ message: "Admin already exists" });
-    }
-
-    const hashedPass = await bcrypt.hash(admin_pass, 10);
-
-    const newAdmin = await Admin.create({
-      admin_id: await generateAdminId(),
-      admin_name,
-      admin_email,
-      admin_pass: hashedPass,
-    });
-
-    res.status(201).json({
-      message: "Admin registered successfully",
-      admin: {
-        admin_id: newAdmin.admin_id,
-        admin_name: newAdmin.admin_name,
-        admin_email: newAdmin.admin_email,
-      },
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-
-
-// --- Protected Routes ---
+// Protected routes
 router.use(adminAuth);
 
 // Get all users
-router.get("/users", async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+router.get('/users', getAllUsers);
 
 // Get all campaigns
 // Get all campaigns

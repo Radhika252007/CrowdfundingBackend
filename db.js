@@ -5,7 +5,7 @@ dotenv.config();
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      dbName: "Crowdfunding",   // ← your DB name here
+      dbName: "Crowdfunding",  
     });
 
     console.log("✅ MongoDB connected to database: crowdfunding");
